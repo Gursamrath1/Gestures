@@ -19,7 +19,7 @@ function take_snapshot()
 
 console.log('ml5 version:', ml5.version);
 
-classifier = ml5.imageClassifier('teachablemachine.withgoogle.com/models/UtoUX_Gim/model.json',modelLoaded);
+classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models/UtoUX_Gim/model.json',modelLoaded);
 
 function modelLoaded() {
     console.log('Model Loaded!');
@@ -30,4 +30,30 @@ function speak(){
     speak_data_1 = "You are  " + prediction_1;
     var utterThis = new SpeechSynthesisUtterance(speak_data_1);
     synth.speak(utterThis);
+}
+
+function check(){
+    img = document.getElementById('captured_image');
+    classifier.classify(img, gotResult);
+}
+
+function gotResult(error, results){
+    if (error){
+        console.log(error);
+    } else {
+        console.log(results);
+        document.getElementById("result_emotion_name").innerHTML = results[0].label;
+        prediction_1 = results[0].label;
+        speak();
+        if(results[0].label == "Good"){
+            document.getElementById("update_emoji").innerHTML = "&#128077;";
+        }
+        if(results[0].label == "Bad"){
+            document.getElementById("update_emoji").innerHTML = "&#128078;";
+        }
+        if(results[0].label == "Ok"){
+            document.getElementById("update_emoji").innerHTML = "&#128076;";
+        }
+        
+    }
 }
